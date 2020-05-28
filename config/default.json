@@ -1,0 +1,3 @@
+{
+  "mongoURI": "mongodb+srv://avacallerymern:avacallerymern@brain-hive-mern-avax2.mongodb.net/test?retryWrites=true&w=majority"
+}

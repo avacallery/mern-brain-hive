@@ -1,17 +1,12 @@
-const express = require('express'); 
+const express = require('express');
 const app = express();
-const cors = require('cors'); 
-const mongourl = 'mongodb+srv://avacallerymern:avacallerymern@brain-hive-mern-avax2.mongodb.net/test?retryWrites=true&w=majority'
-const mongoose = require('mongoose'); 
+const cors = require('cors');
+const connectDB = require('./config/db');
+
+connectDB();
 
 app.use(cors());
-app.use(express.json()); 
-
-mongoose.connect(mongourl, 
-{ useNewUrlParser: true, 
-useUnifiedTopology: true })
-.then(() => console.log('Connected to db'))
-.catch(error => console.error("Failed to connect to db"))
+app.use(express.json({ extended: false }));
 
 const port = process.env.PORT || 3000;
 
