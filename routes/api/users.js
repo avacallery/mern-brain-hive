@@ -8,7 +8,13 @@ const router = express.Router();
 // @access   Public
 
 router.post('/', (req, res) => {
-  res.json({ body: res.body });
+  res.json({ body: req.body });
 });
+
+//create branch with validation
+//validate the body of the request
+//must have email and password
+//email must be valid
+//password must have at least 6 characters
 
 module.exports = router;
