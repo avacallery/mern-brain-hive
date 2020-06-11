@@ -46,4 +46,46 @@ router.post(
   }
 );
 
-module.exports = router;
+// @route    PUT api/users/
+// @desc     Login route
+// @access   Public
+
+router.put(
+  '/',
+  [
+    check('email', 'Email required').not().isEmpty(),
+    check('email', 'Valid email required').isEmail(),
+    check('password', 'Password required').not().isEmpty(),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    //we need try/catch because this is an async call to our database
+    try {
+      const user = await User.findOne({ email: req.body.email });
+
+      if (isEmpty(user)) {
+        return res.status(404).json({ errors: { msg: 'User not found.' } });
+      }
+
+      const isMatch = await bcrypt.compare(req.body.password, user.password);
+
+      if (!isMatch) {
+        return res
+          .status(403)
+          .json({ errors: { message: 'invalid password' } });
+      }
+
+      //make a branch and see if you can figure out the JWT code using JSON web tokens
+      //create the jwt token and return it to user
+      //include email and id
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json(error);
+    }
+  }
+);
+
+router.module.exports = router;
