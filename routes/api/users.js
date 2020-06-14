@@ -3,6 +3,9 @@ const { check, validationResult } = require('express-validator');
 const router = express.Router();
 const isEmpty = require('../../utilities/isEmpty');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const auth = require('../../middleware/auth');
+const config = require('config');
 
 //models
 const User = require('../../models/User');
@@ -81,6 +84,17 @@ router.put(
       //make a branch and see if you can figure out the JWT code using JSON web tokens
       //create the jwt token and return it to user
       //include email and id
+
+      const payload = {
+        user: {
+          id: user.id,
+        },
+      };
+
+      jwt.sign(payload, config.get('jwtToken'), (err, token) => {
+        if (err) throw err;
+        res.json({ token });
+      });
     } catch (error) {
       console.error(error);
       return res.status(500).json(error);
@@ -88,4 +102,4 @@ router.put(
   }
 );
 
-router.module.exports = router;
+module.exports = router;
