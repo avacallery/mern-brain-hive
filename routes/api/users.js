@@ -35,16 +35,26 @@ router.post(
         password: req.body.password,
       };
 
+      //check for existing user
+      //findOne is always going to return a document object
+      const existingUser = await User.findOne({ email: userData.email });
+      if (!isEmpty(existingUser)) {
+        return res.status(400).json({ errors: { email: 'Email in use' } });
+      }
+
       //we need to hash the password before we send to the database
       const salt = await bcrypt.genSalt(10);
       userData.password = await bcrypt.hash(userData.password, salt);
 
       //.create saves one or more documents to the database
       const user = await User.create(userData);
+      const keys = Object.keys(user._doc);
+      console.log(keys);
+      console.log(user);
       return res.json(user);
     } catch (error) {
       console.error(error);
-      return res.status(500);
+      return res.status(500).json(error);
     }
   }
 );
@@ -70,15 +80,13 @@ router.put(
       const user = await User.findOne({ email: req.body.email });
 
       if (isEmpty(user)) {
-        return res.status(404).json({ errors: { msg: 'User not found.' } });
+        return res.status(400).json({ errors: { msg: 'Invalid login.' } });
       }
 
       const isMatch = await bcrypt.compare(req.body.password, user.password);
 
       if (!isMatch) {
-        return res
-          .status(403)
-          .json({ errors: { message: 'invalid password' } });
+        return res.status(400).json({ errors: { message: 'Invalid login.' } });
       }
 
       const payload = {
