@@ -81,13 +81,10 @@ router.put(
           .json({ errors: { message: 'invalid password' } });
       }
 
-      //make a branch and see if you can figure out the JWT code using JSON web tokens
-      //create the jwt token and return it to user
-      //include email and id
-
       const payload = {
         user: {
           id: user.id,
+          email: user.email,
         },
       };
 
