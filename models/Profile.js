@@ -3,10 +3,9 @@ const Schema = mongoose.Schema;
 
 const profileSchema = new Schema(
   {
-    userId: {
-      type: String,
-      required: true,
-      unique: true,
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'users',
     },
     firstName: {
       type: String,
@@ -20,23 +19,15 @@ const profileSchema = new Schema(
       type: String,
       required: true,
     },
-    city: {
-      type: String,
-    },
-    state: {
-      type: String,
-    },
-    githubUrl: {
-      type: String,
-    },
-    twitterUrl: {
-      type: String,
-    },
     bio: {
       type: String,
       required: true,
     },
-    lastLogin: Date,
+    city: String,
+    state: String,
+    avatar: String,
+    githubUrl: String,
+    twitterUrl: String,
   },
   //timestamps(updated at and created at) will track changes to data
   //mongoose will handle the timestamps
