@@ -19,10 +19,7 @@ const profileSchema = new Schema(
       type: String,
       required: true,
     },
-    bio: {
-      type: String,
-      required: true,
-    },
+    bio: String,
     city: String,
     state: String,
     avatar: String,
