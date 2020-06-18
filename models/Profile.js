@@ -6,6 +6,8 @@ const profileSchema = new Schema(
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'users',
+      required: true,
+      unique: true,
     },
     firstName: {
       type: String,
@@ -31,4 +33,4 @@ const profileSchema = new Schema(
   { timestamps: {} }
 );
 
-module.exports = User = mongoose.model('profiles', profileSchema);
+module.exports = Profile = mongoose.model('profiles', profileSchema);
