@@ -8,7 +8,7 @@ const Profile = require('../../models/Profile');
 // @desc     create new profile
 // @access   Public
 
-router.post(async (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const profileData = {
       user: req.body.user,
@@ -18,10 +18,9 @@ router.post(async (req, res) => {
     };
 
     const profile = await Profile.create(profileData);
-    console.log(profile);
 
     return res.json(profile);
-  } catch (err) {
+  } catch (error) {
     console.error(error);
     return res.status(500).json(error);
   }
