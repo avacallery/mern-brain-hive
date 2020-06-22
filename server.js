@@ -13,8 +13,10 @@ app.use(express.json({ extended: false }));
 //bring in routing
 
 const users = require('./routes/api/users');
+const profiles = require('./routes/api/profiles');
 
 app.use('/api/users', users);
+app.use('/api/profiles', profiles);
 
 const port = process.env.PORT || 3000;
 
