@@ -10,6 +10,9 @@ module.exports = function (req, res, next) {
 
   try {
     const decoded = jwt.verify(token, config.get('jwtToken'));
+
+    req.user = decoded;
+    next();
   } catch (err) {
     res.status(401).json({ msg: 'Token is not valid' });
   }
