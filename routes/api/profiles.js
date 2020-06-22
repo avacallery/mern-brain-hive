@@ -15,6 +15,12 @@ router.post('/', async (req, res) => {
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       name: req.body.name,
+      bio: req.body.bio,
+      city: req.body.city,
+      state: req.body.state,
+      avatar: req.body.avatar,
+      githuburl: req.body.githuburl,
+      twitterurl: req.body.twitterurl,
     };
 
     const profile = await Profile.create(profileData);
