@@ -11,7 +11,7 @@ const Profile = require('../../models/Profile');
 router.post('/', async (req, res) => {
   try {
     const profileData = {
-      user: req.body.user,
+      userId: req.body.userId,
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       name: req.body.name,
