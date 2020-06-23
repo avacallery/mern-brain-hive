@@ -66,12 +66,12 @@ router.post(
       if (twitterUrl) profileFields.social.twitterUrl = twitterUrl;
 
       try {
-        let profile = await Profile.findOne(userId);
+        let profile = await Profile.findById(userId);
 
         if (!isEmpty(profile)) {
           //Update
-          profile = await Profile.findOneAndUpdate(
-            { user: req.user.id },
+          profile = await Profile.findByIdAndUpdate(
+            userId,
             { $set: profileFields },
             { new: true }
           );
@@ -93,6 +93,22 @@ router.post(
 // @route    GET api/
 // @desc     Get logged in users profile
 // @access   Private
+
+router.get('/:id', auth, async (req, res) => {
+  try {
+    const profile = await Profile.findOne({ user: req.user.id });
+
+    if (!profile) {
+      return res.status(400).json({ msg: 'There is no profile for this user' });
+    }
+
+    res.json(profile);
+  } catch (error) {
+    console.error(err.message);
+    s;
+    res.status(500).send('Server Error');
+  }
+});
 
 // @route    GET api/
 // @desc     Get all profiles - 1. do not send city and state and 2. do not include logged in user in results
