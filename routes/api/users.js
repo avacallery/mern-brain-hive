@@ -90,10 +90,8 @@ router.put(
       }
 
       const payload = {
-        user: {
-          id: user.id,
-          email: user.email,
-        },
+        id: user.id,
+        email: user.email,
       };
 
       jwt.sign(payload, config.get('jwtToken'), (err, token) => {
