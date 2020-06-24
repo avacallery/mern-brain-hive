@@ -118,7 +118,7 @@ router.get('/:id', auth, async (req, res) => {
 router.get('/', auth, async (req, res) => {
   try {
     const profiles = await Profile.find(
-      { firstName: 'Ava Test 1' },
+      { users: req.user.ids },
       { city: 0, state: 0 }
     );
 
