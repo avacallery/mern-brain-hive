@@ -10,10 +10,10 @@ const Profile = require('../../models/Profile');
 // @desc     Read profile
 // @access   Public
 
-router.get('/', auth, (req, res) => {
-  console.log(req.user);
-  res.json({ message: 'test route' });
-});
+// router.get('/', auth, (req, res) => {
+//   console.log(req.user);
+//   res.json({ message: 'test route' });
+// });
 
 // @route    POST api/profiles/
 // @desc     create new profile for logged in user
@@ -102,6 +102,7 @@ router.get('/:id', auth, async (req, res) => {
       return res.status(400).json({ msg: 'There is no profile for this user' });
     }
 
+    console.log(profile);
     res.json(profile);
   } catch (error) {
     console.error(err.message);
@@ -113,6 +114,26 @@ router.get('/:id', auth, async (req, res) => {
 // @route    GET api/
 // @desc     Get all profiles - 1. do not send city and state and 2. do not include logged in user in results
 // @access   Private
+
+router.get('/', auth, async (req, res) => {
+  try {
+    const profiles = await Profile.find(
+      { firstName: 'Ava Test 1' },
+      { city: 0, state: 0 }
+    );
+
+    if (!profiles) {
+      return res.status(400).json({ msg: 'Cannot access profiles.' });
+    }
+
+    console.log(profiles);
+    res.json(profiles);
+  } catch (error) {
+    console.error(err.message);
+    s;
+    res.status(500).send('Server Error');
+  }
+});
 
 //mongo has something called PROJECTION  (1) and  (2) queries
 module.exports = router;
