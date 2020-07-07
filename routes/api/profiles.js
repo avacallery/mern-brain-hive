@@ -47,15 +47,16 @@ router.post(
       const userId = req.user.id;
 
       // Build profile object
-
+      //trim() sends back of the modify version of the copy
       const profileFields = {
         firstName: firstName.trim(),
         lastName: lastName.trim(),
-        name: `${firstName} ${lastName}`,
+        name: `${firstName.trim()} ${lastName.trim()}`,
         //you can access characters of a string like an array
-        initials: `${firstName[0]}${lastName[0]}`,
+        // initials: `${firstName[0]}${lastName[0]}`,
       };
 
+      profileFields.name = `${profileFields.firstName} ${profileFields.lastName}`;
       profileFields.user = userId;
       if (bio) profileFields.bio = bio;
       if (city) profileFields.city = city;
