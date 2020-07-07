@@ -37,7 +37,6 @@ router.post(
       const {
         firstName,
         lastName,
-        name,
         bio,
         city,
         state,
@@ -50,9 +49,11 @@ router.post(
       // Build profile object
 
       const profileFields = {
-        firstName,
-        lastName,
-        name,
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+        name: `${firstName} ${lastName}`,
+        //you can access characters of a string like an array
+        initials: `${firstName[0]}${lastName[0]}`,
       };
 
       profileFields.user = userId;
