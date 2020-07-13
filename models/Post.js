@@ -12,6 +12,10 @@ const commentSchema = new Schema(
       type: String,
       required: true,
     },
+    likes: {
+      type: [Schema.Types.ObjectId],
+      default: [],
+    },
     // TODO likes
   },
   { timestamps: {} }
