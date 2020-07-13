@@ -16,7 +16,6 @@ const commentSchema = new Schema(
       type: [Schema.Types.ObjectId],
       default: [],
     },
-    // TODO likes
   },
   { timestamps: {} }
 );
@@ -74,7 +73,20 @@ const postSchema = new Schema(
     videoLength: Number,
     timeToComplete: Number,
     comments: { type: [commentSchema], default: [] },
-    // TODO rating
+    // TODO rating - 1 to 5 rating scale
+    // rating is an array of user objects that contains user(objectId) and rating
+    rating: {
+      type: [
+        {
+          user: {
+            type: Schema.Types.ObjectId,
+            required: true,
+          },
+          rating: Number,
+        },
+      ],
+      default: [],
+    },
     // TODO archive
     // TODO feature
   },
