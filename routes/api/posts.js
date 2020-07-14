@@ -41,6 +41,10 @@ router.post(
     check('link', 'Valid URL required').optional().isURL(),
   ],
   (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
     return res.json(req.body);
   }
 );
