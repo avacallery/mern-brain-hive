@@ -6,17 +6,18 @@ const connectDB = require('./config/db');
 connectDB();
 
 //express configuration
-
 app.use(cors());
 app.use(express.json({ extended: false }));
 
-//bring in routing
-
+//bring in router
 const users = require('./routes/api/users');
 const profiles = require('./routes/api/profiles');
+const posts = require('./routes/api/posts');
 
+// create the route that uses the router
 app.use('/api/users', users);
 app.use('/api/profiles', profiles);
+app.use('/api/posts', posts);
 
 const port = process.env.PORT || 3000;
 
