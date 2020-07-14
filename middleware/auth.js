@@ -11,6 +11,7 @@ module.exports = function (req, res, next) {
   try {
     const decoded = jwt.verify(token, config.get('jwtToken'));
 
+    // decoded gives us the id of the user account
     req.user = decoded;
     next();
   } catch (err) {

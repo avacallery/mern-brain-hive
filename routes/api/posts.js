@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const { check, validationResult } = require('express-validator');
+
 const auth = require('../../middleware/auth');
 const Post = require('../../models/Post');
 const User = require('../../models/User');
@@ -15,5 +17,41 @@ const User = require('../../models/User');
 router.get('/test', (req, res) => {
   res.json({ msg: 'Test' });
 });
+
+// @route   POST api/posts
+// @desc    Create a new post
+// @access  Private
+
+router.post(
+  '/',
+  auth,
+  [
+    check('author', 'Author is required').not().isEmpty(),
+    check('title', 'Title is required').not().isEmpty(),
+    check('skillLevel', 'Select from dropdown').isIn([
+      'Other',
+      'Article',
+      'Video',
+      'Book',
+      'Slideshow',
+      'eBook',
+      'podcast',
+    ]),
+    check('summary', 'Summary is required').not().isEmpty(),
+    check('link', 'Valid URL required').optional().isURL(),
+  ],
+  (req, res) => {
+    return res.json(req.body);
+  }
+);
+
+// resourceType -> string -> enum
+// publishedAt -> date -> optional
+// videoLength -> number -> optional
+// timeToComplete -> number -> optional
+
+// use express-validator to check if data is valid/right format
+// Post model -> post to the Post model in db
+// return the new Post to the frontend
 
 module.exports = router;

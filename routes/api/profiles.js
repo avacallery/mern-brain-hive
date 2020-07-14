@@ -92,7 +92,7 @@ router.post(
   }
 );
 
-// @route    GET api/
+// @route    GET api/profiles/:id
 // @desc     Get logged in users profile
 // @access   Private
 
@@ -113,7 +113,7 @@ router.get('/:id', auth, async (req, res) => {
   }
 });
 
-// @route    GET api/
+// @route    GET api/profiles
 // @desc     Get all profiles - 1. do not send city and state and 2. do not include logged in user in results
 // @access   Private
 
