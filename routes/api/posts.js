@@ -26,8 +26,8 @@ router.post(
   '/',
   auth,
   [
-    check('author', 'Author is required').not().isEmpty(),
-    check('title', 'Title is required').not().isEmpty(),
+    check('author', 'Author is required').notEmpty(),
+    check('title', 'Title is required').notEmpty(),
     check('skillLevel', 'Select from dropdown').isIn([
       'Other',
       'Article',
@@ -37,7 +37,7 @@ router.post(
       'eBook',
       'podcast',
     ]),
-    check('summary', 'Summary is required').not().isEmpty(),
+    check('summary', 'Summary is required').notEmpty(),
     check('link', 'Valid URL required').optional().isURL(),
   ],
   (req, res) => {
