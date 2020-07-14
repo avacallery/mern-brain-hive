@@ -14,7 +14,7 @@ const users = require('./routes/api/users');
 const profiles = require('./routes/api/profiles');
 const posts = require('./routes/api/posts');
 
-// create the route that uses the router
+// create the route that uses the router we brought in
 app.use('/api/users', users);
 app.use('/api/profiles', profiles);
 app.use('/api/posts', posts);
