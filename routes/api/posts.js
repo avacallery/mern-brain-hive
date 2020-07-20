@@ -5,7 +5,6 @@ const { check, validationResult } = require('express-validator');
 const auth = require('../../middleware/auth');
 const Post = require('../../models/Post');
 const Profile = require('../../models/Profile');
-const User = require('../../models/User');
 
 // @route   GET api/posts/test
 // @desc    Test Route
@@ -71,6 +70,7 @@ router.post(
       console.log(postData);
       // get profile matching userId using req.user.id
       const profile = await Profile.findOne({ user: req.user.id });
+      console.log(profile);
       // add profileId to postData
       postData.poster = profile.id;
       // create the post in the database

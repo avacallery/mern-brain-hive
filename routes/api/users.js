@@ -89,15 +89,16 @@ router.put(
         return res.status(400).json({ errors: { message: 'Invalid login.' } });
       }
 
+      User.findByIdAndUpdate(user._id, { lastLogin: Date.now() });
+
       const payload = {
         id: user.id,
         email: user.email,
       };
 
-      jwt.sign(payload, config.get('jwtToken'), (err, token) => {
-        if (err) throw err;
-        res.json({ token });
-      });
+      const token = jwt.sign(payload, config.jwtToken, {});
+
+      res.json(token);
     } catch (error) {
       console.error(error);
       return res.status(500).json(error);
