@@ -48,13 +48,13 @@ router.post(
 
       // Build profile object
       //trim() sends back of the modify version of the copy
-      const profileFields = {
-        firstName: firstName.trim(),
-        lastName: lastName.trim(),
-        name: `${firstName.trim()} ${lastName.trim()}`,
-        //you can access characters of a string like an array
-        // initials: `${firstName[0]}${lastName[0]}`,
-      };
+      const profileFields = {};
+      if (firstName) profileFields.firstName = firstName.trim();
+      if (lastName) profileFields.lastName = lastName.trim();
+      // if (name) profileFields.name = name.trim();
+
+      //you can access characters of a string like an array
+      // initials: `${firstName[0]}${lastName[0]}`
 
       profileFields.name = `${profileFields.firstName} ${profileFields.lastName}`;
       profileFields.user = userId;
@@ -68,9 +68,10 @@ router.post(
       if (twitterUrl) profileFields.social.twitterUrl = twitterUrl;
 
       try {
-        let profile = await Profile.findById(userId);
+        let profile = await Profile.findOne({ user: req.user.id });
 
         if (!isEmpty(profile)) {
+          console.log('Hello from update branch');
           //Update
           profile = await Profile.findOneAndUpdate(
             { user: req.user.id },
@@ -80,6 +81,7 @@ router.post(
           return res.json(profile);
         }
         //Create
+        console.log('Hello from create branch');
         profile = await Profile.create(profileFields);
         res.json(profile);
       } catch (error) {

@@ -21,12 +21,16 @@ const profileSchema = new Schema(
       type: String,
       required: true,
     },
+
     bio: String,
     city: String,
     state: String,
     avatar: String,
-    githubUrl: String,
-    twitterUrl: String,
+
+    social: {
+      githubUrl: String,
+      twitterUrl: String,
+    },
   },
   //timestamps(updated at and created at) will track changes to data
   //mongoose will handle the timestamps
