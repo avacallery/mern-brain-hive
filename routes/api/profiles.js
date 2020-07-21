@@ -72,8 +72,8 @@ router.post(
 
         if (!isEmpty(profile)) {
           //Update
-          profile = await Profile.findByIdAndUpdate(
-            userId,
+          profile = await Profile.findOneAndUpdate(
+            { user: req.user.id },
             { $set: profileFields },
             { new: true }
           );
