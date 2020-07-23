@@ -84,7 +84,25 @@ router.post(
   }
 );
 
-// Post model -> post to the Post model in db
-// return the new Post to the frontend
+// @route   GET api/posts
+// @desc    Get all posts
+// @access  Public
+
+// get and return to request all posts
+//
+
+router.get('/', async (req, res) => {
+  try {
+    const posts = await Post.find({ deleted: false });
+    res.json(posts);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json(error);
+  }
+});
+
+// @route   GET api/posts/:id
+// @desc    Get single post by id
+// @access  Public
 
 module.exports = router;
