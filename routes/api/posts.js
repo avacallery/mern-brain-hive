@@ -4,6 +4,7 @@ const { check, validationResult } = require('express-validator');
 
 const auth = require('../../middleware/auth');
 const Post = require('../../models/Post');
+const User = require('../../models/User');
 const Profile = require('../../models/Profile');
 
 // @route   GET api/posts/test
@@ -104,5 +105,21 @@ router.get('/', async (req, res) => {
 // @route   GET api/posts/:id
 // @desc    Get single post by id
 // @access  Public
+
+router.get('/:postId', async (req, res) => {
+  try {
+    // using req.params.id to access URL postId
+    const post = await Post.findById(req.params.postId);
+
+    if (!post) {
+      return res.status(404).json({ message: 'Post not found' });
+    }
+
+    res.json(post);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json(error);
+  }
+});
 
 module.exports = router;
