@@ -139,7 +139,10 @@ router.get('/:postId', async (req, res) => {
 
 router.put('/:postId', auth, async (req, res) => {
   try {
-    const profile = await Profile.find({ user: req.user.id });
+    const profile = await Profile.findOne({ user: req.user.id });
+
+    console.log(profile._id);
+    console.log(req.params.postId);
 
     // verify that the poster and the id match and update if they do match in one instance so nothing happens inbetween the updating (findOneAndUpdate)
     const post = await Post.findOneAndUpdate(
@@ -153,12 +156,14 @@ router.put('/:postId', auth, async (req, res) => {
     );
 
     if (!post) {
-      const post = await Post.findOneById(req.params.postId);
+      const post = await Post.findById(req.params.postId);
       if (!post) {
         return res.status(404).json({ msg: 'Post not found.' });
       }
       return res.status(401).json({ msg: 'Access denied.' });
     }
+
+    res.json(post);
   } catch (err) {
     console.error(error);
     return res.status(500).json(error);
