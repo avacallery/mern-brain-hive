@@ -94,7 +94,10 @@ router.post(
 
 router.get('/', async (req, res) => {
   try {
-    const posts = await Post.find({ deleted: false });
+    const posts = await Post.find({ deleted: false }).populate(
+      'poster',
+      'avatar name'
+    );
     res.json(posts);
   } catch (error) {
     console.error(error);
@@ -102,7 +105,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-// @route   GET api/posts/:id
+// @route   GET api/posts/:postId
 // @desc    Get single post by id
 // @access  Public
 
@@ -113,6 +116,7 @@ router.get('/:postId', async (req, res) => {
 
     if (!post) {
       return res.status(404).json({ message: 'Post not found' });
+      // .populate('poster', ['avatar', 'name', 'firstName']);
     }
 
     res.json(post);
@@ -121,5 +125,77 @@ router.get('/:postId', async (req, res) => {
     return res.status(500).json(error);
   }
 });
+
+// @route   PUT api/posts/:postId
+// @desc    Update existing post
+// @access  Owner
+
+// get and update existing post
+// find the post by id in the Post model
+// confirm logged in user is the owner
+// modify the data
+// commit the changes to the database
+// send the new data back to the requester
+
+router.put('/:postId', auth, async (req, res) => {
+  try {
+    const profile = await Profile.find({ user: req.user.id });
+
+    // verify that the poster and the id match and update if they do match in one instance so nothing happens inbetween the updating (findOneAndUpdate)
+    const post = await Post.findOneAndUpdate(
+      {
+        _id: req.params.postId,
+        poster: profile._id,
+      },
+      req.body,
+      // return new version
+      { new: true }
+    );
+
+    if (!post) {
+      const post = await Post.findOneById(req.params.postId);
+      if (!post) {
+        return res.status(404).json({ msg: 'Post not found.' });
+      }
+      return res.status(401).json({ msg: 'Access denied.' });
+    }
+  } catch (err) {
+    console.error(error);
+    return res.status(500).json(error);
+  }
+});
+
+/* router.put('/:postId', auth, async (req, res) => {
+   try {
+    let post = await Post.findById(req.params.postId);
+
+    if (!post) {
+      return res.status(404).json({ msg: 'Post not found.' });
+    }
+
+    // pull profile._id from the Post (req.params.postId) which uses the Profile model
+    const profile = await Profile.findById(post.poster);
+
+    if (req.user.id !== profile.user) {
+      return res.status(401).json({ msg: 'Access denied.' });
+    }
+
+    // find profile based on an id that it contains
+    // const profile = await Profile.find({ user: req.user.id });
+    // if (profile._id !== post.poser)
+
+    // MODIFY the data
+    const postData = { ...post, ...req.body };
+    // anything that comes after the first spread operator (...) will override if the keys are the same
+    // whatever is entered in req.body to create or update based on the keys in postData, which comes from the Post model
+
+    // update with new post object
+    await post.update(postData);
+    res.json(post);
+  } catch (err) {
+    console.error(error);
+    return res.status(500).json(error);
+  }
+}); */
 
 module.exports = router;
