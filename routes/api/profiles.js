@@ -162,4 +162,18 @@ router.get('/self', auth, async (req, res) => {
   }
 });
 
+// @route   PUT api/profiles
+// @desc    Update your profile
+// @access  Private
+
+router.put('/', auth, async (req, res) => {
+  try {
+    const profile = await Profile.findOneAndUpdate({ user: req.user.id });
+    res.json(profile);
+  } catch (error) {
+    console.error(err.message);
+    res.status(500).json(error);
+  }
+});
+
 module.exports = router;
