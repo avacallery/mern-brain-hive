@@ -98,7 +98,7 @@ router.post(
 // @desc     Get logged in users profile
 // @access   Private
 
-router.get('/:id', auth, async (req, res) => {
+router.get('/id/:id', auth, async (req, res) => {
   try {
     const profile = await Profile.findOne({ user: req.params.id });
 
@@ -118,6 +118,8 @@ router.get('/:id', auth, async (req, res) => {
 // @route    GET api/profiles
 // @desc     Get all profiles - 1. do not send city and state and 2. do not include logged in user in results
 // @access   Private
+
+//mongo has something called PROJECTION  (1) and  (2) queries
 
 router.get('/', auth, async (req, res) => {
   try {
@@ -139,5 +141,25 @@ router.get('/', auth, async (req, res) => {
   }
 });
 
-//mongo has something called PROJECTION  (1) and  (2) queries
+// @route    GET api/profiles/self
+// @desc     Get self profile
+// @access   Private
+
+router.get('/self', auth, async (req, res) => {
+  try {
+    const profile = await Profile.findOne({ user: req.user.id });
+
+    if (!profile) {
+      return res.status(400).json({ msg: 'There is no profile for this user' });
+    }
+
+    console.log(profile);
+    res.json(profile);
+  } catch (error) {
+    console.error(err.message);
+    s;
+    res.status(500).send('Server Error');
+  }
+});
+
 module.exports = router;
