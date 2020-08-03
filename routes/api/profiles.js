@@ -94,24 +94,43 @@ router.post(
   }
 );
 
-// @route    GET api/profiles/:id
-// @desc     Get logged in users profile
+// @route    GET api/profiles/self
+// @desc     Get self profile
 // @access   Private
 
-router.get('/id/:id', auth, async (req, res) => {
+router.get('/self', auth, async (req, res) => {
   try {
-    const profile = await Profile.findOne({ user: req.params.id });
+    const profile = await Profile.findOne({ user: req.user.id });
 
     if (!profile) {
-      return res.status(400).json({ msg: 'There is no profile for this user' });
+      return res.status(404).json({ msg: 'There is no profile for this user' });
+    }
+
+    res.json(profile);
+  } catch (error) {
+    console.error(err.message);
+    res.status(500).json({ msg: 'Server Error', err });
+  }
+});
+
+// @route    GET api/profiles/:id
+// @desc     Get profile by id
+// @access   Public
+
+router.get('/:id', async (req, res) => {
+  try {
+    // const profile = await Profile.findOne({ user: req.params.id });
+    const profile = await Profile.findById(req.params.id);
+
+    if (!profile) {
+      return res.status(404).json({ msg: 'There is no profile for this user' });
     }
 
     console.log(profile);
     res.json(profile);
   } catch (error) {
     console.error(err.message);
-    s;
-    res.status(500).send('Server Error');
+    res.status(500).json({ msg: 'Server Error', err });
   }
 });
 
@@ -120,12 +139,13 @@ router.get('/id/:id', auth, async (req, res) => {
 // @access   Private
 
 //mongo has something called PROJECTION  (1) and  (2) queries
+// projection - includes or excludes certain items
 
 router.get('/', auth, async (req, res) => {
   try {
     const profiles = await Profile.find(
       { user: { $ne: req.user.id } },
-      { city: 0, state: 0 }
+      { city: 0, state: 0, user: 0 }
     );
 
     if (!profiles) {
@@ -141,34 +161,24 @@ router.get('/', auth, async (req, res) => {
   }
 });
 
-// @route    GET api/profiles/self
-// @desc     Get self profile
-// @access   Private
-
-router.get('/self', auth, async (req, res) => {
-  try {
-    const profile = await Profile.findOne({ user: req.user.id });
-
-    if (!profile) {
-      return res.status(400).json({ msg: 'There is no profile for this user' });
-    }
-
-    console.log(profile);
-    res.json(profile);
-  } catch (error) {
-    console.error(err.message);
-    s;
-    res.status(500).send('Server Error');
-  }
-});
-
 // @route   PUT api/profiles
 // @desc    Update your profile
 // @access  Private
 
 router.put('/', auth, async (req, res) => {
   try {
-    const profile = await Profile.findOneAndUpdate({ user: req.user.id });
+    const profile = await Profile.findOneAndUpdate(
+      // we use new: true to return the updated object
+      // set will update the fields we set (req.body) to the updated data
+      { user: req.user.id },
+      { $set: req.body },
+      { new: true }
+    );
+
+    if (!profile) {
+      return res.status(404).json({ msg: 'Profile not created.' });
+    }
+
     res.json(profile);
   } catch (error) {
     console.error(err.message);
