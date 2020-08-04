@@ -204,7 +204,7 @@ router.put('/:postId', auth, async (req, res) => {
 }); */
 
 // @route   DELETE api/posts/:postId
-// @desc    Delete post by id
+// @desc    Delete post by id --- Locking method
 // @access  Owner
 
 router.delete('/:id', auth, async (req, res) => {
@@ -235,7 +235,7 @@ router.delete('/:id', auth, async (req, res) => {
 });
 
 // @route   DELETE api/posts/:postId
-// @desc    Delete post by id
+// @desc    Delete post by id ---- non-locking method
 // @access  Owner
 
 router.delete('/:id', auth, async (req, res) => {
