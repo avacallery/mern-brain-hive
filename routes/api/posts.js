@@ -251,6 +251,14 @@ router.delete('/:id', auth, async (req, res) => {
       poster: profile._id,
     });
 
+    if (!result) {
+      const post = await Post.findById(req.params.id);
+      if (!post) {
+        return res.status(404).json({ msg: 'Post not found' });
+      }
+      res.status(401).json({ msg: 'Unauthorized.' });
+    }
+
     return res.json({ msg: 'Success ' });
   } catch (err) {
     console.error(error);
