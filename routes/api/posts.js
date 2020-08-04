@@ -187,7 +187,7 @@ router.put('/:postId', auth, async (req, res) => {
 
     // find profile based on an id that it contains
     // const profile = await Profile.find({ user: req.user.id });
-    // if (profile._id !== post.poser)
+    // if (profile._id !== post.poster)
 
     // MODIFY the data
     const postData = { ...post, ...req.body };
@@ -202,5 +202,60 @@ router.put('/:postId', auth, async (req, res) => {
     return res.status(500).json(error);
   }
 }); */
+
+// @route   DELETE api/posts/:postId
+// @desc    Delete post by id
+// @access  Owner
+
+router.delete('/:id', auth, async (req, res) => {
+  //confirm logged in user
+  //find post
+  //confirm the post is owned by the logged in user
+  //delete the post
+  //return success message
+  try {
+    const post = await Post.findById(req.params.id);
+
+    if (!post) {
+      return res.status(404).json({ msg: 'Post not found.' });
+    }
+    // make sure the profile that we pull matches the id of the user making the request
+    const profile = await Profile.findById(post.poster);
+
+    if (req.user.id != profile.user) {
+      return res.status(401).json({ msg: 'Unauthorized.' });
+    }
+
+    await post.remove();
+    res.json({ msg: 'Post removed. ' });
+  } catch (err) {
+    console.error(error);
+    return res.status(500).json(error);
+  }
+});
+
+// @route   DELETE api/posts/:postId
+// @desc    Delete post by id
+// @access  Owner
+
+router.delete('/:id', auth, async (req, res) => {
+  try {
+    // we are using findOne because we want to find the user id, which is located within the Profile model
+    const profile = await Profile.findOne({ user: req.user.id });
+    // pull id from the poster
+    // findOneAndDelete instead of findOneAndRemove so Mongo runs a legit delete
+    // if we find one and delete, it will return the deleted document in result
+    // if returns null, we have not deleted
+    const result = await Post.findOneAndDelete({
+      _id: req.params.id,
+      poster: profile._id,
+    });
+
+    return res.json({ msg: 'Success ' });
+  } catch (err) {
+    console.error(error);
+    res.status(500).json(error);
+  }
+});
 
 module.exports = router;
