@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { check, validationResult } = require('express-validator');
+const commentsRouter = require('./comments');
 
 const auth = require('../../middleware/auth');
 const Post = require('../../models/Post');
@@ -290,12 +291,12 @@ router.delete('/:id', auth, async (req, res) => {
 // set is another kind of collection items (set of unique elements)
 // mongoose uses collection system to create $addtoset -> if element is already there, it will not add
 
-router.put(':/postID/like', auth, async (req, res) => {
+router.put(':/postId/like', auth, async (req, res) => {
   try {
     let post;
     if (req.body.like === true) {
       post = await Post.findByIdAndUpdate(
-        req.params.postID,
+        req.params.postId,
         {
           $addToSet: { likes: req.user.id },
         },
@@ -303,7 +304,7 @@ router.put(':/postID/like', auth, async (req, res) => {
       );
     } else if (req.body.like === false) {
       post = await Post.findByIdAndUpdate(
-        req.params.postID,
+        req.params.postId,
         {
           $pull: { likes: req.user.id },
         },
@@ -318,7 +319,7 @@ router.put(':/postID/like', auth, async (req, res) => {
 });
 
 // create nested router
-// router.use("/:postID", commentsRouter)
-// won't match our router because there's a second parameter
+// router.use("/:postId/comments", commentsRouter)
+// won't match our router because there's a second parameter that will come after /:postId
 
 module.exports = router;
