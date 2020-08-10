@@ -84,22 +84,10 @@ const postSchema = new Schema(
     videoLength: Number,
     timeToComplete: Number,
     comments: { type: [commentSchema], default: [] },
-    // TODO rating - 1 to 5 rating scale
-    // rating is an array of user objects that contains user(objectId) and rating
-    rating: {
-      type: [
-        {
-          user: {
-            type: Schema.Types.ObjectId,
-            required: true,
-          },
-          rating: Number,
-        },
-      ],
+    likes: {
+      type: [schema.Types.ObjectId],
       default: [],
     },
-    // TODO archive
-    // TODO feature
   },
   { timestamps: {} }
 );
