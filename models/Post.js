@@ -85,7 +85,7 @@ const postSchema = new Schema(
     timeToComplete: Number,
     comments: { type: [commentSchema], default: [] },
     likes: {
-      type: [schema.Types.ObjectId],
+      type: [Schema.Types.ObjectId],
       default: [],
     },
   },

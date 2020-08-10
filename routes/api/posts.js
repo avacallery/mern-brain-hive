@@ -266,4 +266,59 @@ router.delete('/:id', auth, async (req, res) => {
   }
 });
 
+// updating the post model by adding or removing a Like
+
+// @route   PUT api/posts/:postId/like
+// @desc    Add or remove a like from a post
+// @access  Private
+
+// epic: To pull a post and either add a like or remove an existing like from the user, return like count
+
+// ensure logged in
+// find post by id
+// pull the task from the body (like/unlike)
+// true/false and numbers are easier to send across bandwith or readability "liked" or "unliked" ?
+// validate the body to make sure we have a task (like/unlike)
+// if like
+// // add the userId to the like set
+// else unlike
+// // remove userId from the set
+// done
+// // save updated post <- non-locking method (an atomic method)
+// return the like count to the requester
+
+// set is another kind of collection items (set of unique elements)
+// mongoose uses collection system to create $addtoset -> if element is already there, it will not add
+
+router.put(':/postID/like', auth, async (req, res) => {
+  try {
+    let post;
+    if (req.body.like === true) {
+      post = await Post.findByIdAndUpdate(
+        req.params.postID,
+        {
+          $addToSet: { likes: req.user.id },
+        },
+        { new: true }
+      );
+    } else if (req.body.like === false) {
+      post = await Post.findByIdAndUpdate(
+        req.params.postID,
+        {
+          $pull: { likes: req.user.id },
+        },
+        { new: true }
+      );
+    }
+    res.status(200).json({ likes: post.likes.length });
+  } catch (err) {
+    console.error('Error in /' + req.params.postId + '/like' + error.message);
+    res.status(500).json(error);
+  }
+});
+
+// create nested router
+// router.use("/:postID", commentsRouter)
+// won't match our router because there's a second parameter
+
 module.exports = router;
