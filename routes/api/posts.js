@@ -319,7 +319,7 @@ router.put(':/postId/like', auth, async (req, res) => {
 });
 
 // create nested router
-// router.use("/:postId/comments", commentsRouter)
+router.use('/:postId', commentsRouter);
 // won't match our router because there's a second parameter that will come after /:postId
 
 module.exports = router;
