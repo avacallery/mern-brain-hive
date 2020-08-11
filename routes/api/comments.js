@@ -10,16 +10,35 @@ const Profile = require('../../models/Profile');
 // @desc    Create a new comment
 // @access  Private
 
-// epic: add a comment to a post and return updated comments array
+router.post('/', auth, async (req, res) => {
+  try {
+    const profile = await Profile.findOne({ user: req.user.id });
+    if (!profile) {
+      res.status(400).json({ message: 'Profile required to add comments.' });
+    }
 
-// ensure user logged in
-// find post by the postId
-// get/verify User Profile
-// get the comment from the request
-// build comment object (get profileId through userId)
-// add the comment to the post
-// return comments array
+    const comment = {
+      profile: profile._id,
+      content: req.body.content,
+    };
+    //$push Mongoose command to add to an array,
+    // in this case, pushing to the comments array in the Post schema
+    const post = await findByIdAndUpdate(
+      req.params.postID,
+      {
+        $push: { comments: comment },
+      },
+      { new: true }
+    );
 
-router.post('/:postId/comments', auth, async (req, res) => {});
+    const post = await Post.findById(req.params.postID);
+    if (!post) {
+      res.status(404).json({ message: 'Post not found.' });
+    }
 
+    res.json(post.comments);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
 module.exports = router;
