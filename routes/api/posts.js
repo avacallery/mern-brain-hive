@@ -16,9 +16,9 @@ const Profile = require('../../models/Profile');
 // express converts what we're sending (an object) into json syntax
 // .send sends back HTML so when we're working with APIs, .json is recommended
 
-// router.get('/test', (req, res) => {
-//   res.json({ msg: 'Test' });
-// });
+router.get('/test', (req, res) => {
+  res.json({ msg: 'It works!' });
+});
 
 // @route   POST api/posts
 // @desc    Create a new post
