@@ -17,7 +17,7 @@ export default (state = INITIAL_STATE, action) => {
     case 'FETCH_POSTS':
       return {
         ...state,
-        list: [...list, ...payload],
+        list: [...state.list, ...payload],
         loading: false,
       };
     case 'POSTS_FAILED':
