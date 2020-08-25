@@ -28,7 +28,7 @@ export default (state = INITIAL_STATE, action) => {
         loading: false,
         errors: {},
       };
-    case 'POST_FAILURE':
+    case 'FAILED_POST':
       return {
         ...state,
         post: null,
