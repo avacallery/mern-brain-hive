@@ -1,45 +1,52 @@
 const INITIAL_STATE = {
-  post: {
-    user: {},
+  query: {
     author: '',
     skillLevel: '',
     cohort: '',
-    categories: [],
+    title: '',
+    categories: '',
     link: '',
     resourceType: '',
     publishedAt: Date,
     videoLength: Number,
     timeToComplete: Number,
-    comments: {},
-    likes: [],
   },
-  loading: true,
+  submitted: false,
+  // not submitting when we load the page
   errors: {},
 };
 
 export default (state = INITIAL_STATE, action) => {
   const { type, payload } = action;
   switch (type) {
-    case 'UPDATE_POST':
-    case 'SUBMIT_POST':
+    case 'UPDATE_FIELD':
+      // monitor changes as user is making them
       return {
         ...state,
-        post: payload,
-        loading: false,
+        query: { ...state.query, [payload.field]: payload.value },
+      };
+    case 'SUBMIT_POST':
+      // tells system we are submitting
+      return {
+        ...state,
+        submitted: true,
+        // disable submit button by setting to true
         errors: {},
       };
     case 'FAILED_POST':
       return {
         ...state,
-        post: null,
-        loading: false,
-        errors: {},
+        // no longer submitting so loading set to false
+        submitted: false,
+        // give user the errors
+        errors: payload,
       };
     case 'POST_SUCCESS':
       return {
-        ...state,
-        ...payload,
-        loading: false,
+        // we use spread operator so we don't overwrite state
+        ...INITIAL_STATE,
       };
+    default:
+      return state;
   }
 };
